@@ -20,7 +20,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade platformio
         git rm -r $GITHUB_WORKSPACE/*.bin || true
-    - name: Run PlatformIO dev soundReactive_lolin_d32
+    - name: Run PlatformIO dev soundReactive_esp32dev
       run: |
         rm -rf /tmp/WLEDtemp/* || true
         mkdir -p /tmp/WLEDtemp
@@ -30,23 +30,23 @@ jobs:
         cd `cat /tmp/WLEDtemp/wledfoldername`
         npm install
         echo '[env:custom_build]' >>platformio.ini
-        echo 'extends = env:soundReactive_lolin_d32' >>platformio.ini
-        echo 'build_flags = ${env:soundReactive_lolin_d32.build_flags} -D LOLIN_WIFI_FIX' >>platformio.ini
+        echo 'extends = env:soundReactive_esp32dev' >>platformio.ini
+        echo 'build_flags = ${env:soundReactive_esp32dev.build_flags} -D LOLIN_WIFI_FIX' >>platformio.ini
         
         echo 'build_unflags= -D WLED_RELEASE_NAME' >>platformio.ini
         pio run -e custom_build || pio run -e custom_build || true
-    - name: Copy Files dev soundReactive_lolin_d32
+    - name: Copy Files dev soundReactive_esp32dev
       run: |
         cd $GITHUB_WORKSPACE
         WLEDFOLDERNAME=`cat /tmp/WLEDtemp/wledfoldername`
-        cp ${WLEDFOLDERNAME}/build_output/firmware/custom_build.bin $GITHUB_WORKSPACE/build_dev_soundReactive_lolin_d32.bin || true
+        cp ${WLEDFOLDERNAME}/build_output/firmware/custom_build.bin $GITHUB_WORKSPACE/build_dev_soundReactive_esp32dev.bin || true
         date -I | tr -d '\n' >$GITHUB_WORKSPACE/last_update_date.txt
-    - name: Commit Files dev soundReactive_lolin_d32
+    - name: Commit Files dev soundReactive_esp32dev
       run: |
         cd $GITHUB_WORKSPACE
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        git add $GITHUB_WORKSPACE/build_dev_soundReactive_lolin_d32.bin || true
+        git add $GITHUB_WORKSPACE/build_dev_soundReactive_esp32dev.bin || true
         git add $GITHUB_WORKSPACE/last_update_date.txt || true
         git commit -m "Commit Custom Build" || true
         git push origin main || true
